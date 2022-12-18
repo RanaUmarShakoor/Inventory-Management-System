@@ -14,17 +14,15 @@ struct Allocated_to
 	char name[MAX_NAME_CHAR];
 };
 
-
 struct InventoryItem
 {
 	char Name[MAX_NAME_CHAR];
 	int Item_ID;
 	char category[15];
-	int Item_count;
-	int AssignedItems = 0;
+	int Item_count=0;
+	int allocatedItems=0;
 	Allocated_to assigned_to[FACULTY_MEMBERS];
 };
-
 
 
 void Menu();
@@ -32,9 +30,9 @@ void Add_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS]
 void View_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS]);
 void Edit_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS]);
 void Delete_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS]);
-void Assign_item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS]);
-
-
+void Assign_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS]);
+void Retrieve_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS]);
+void List_Assigned_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS]);
 
 
 
@@ -44,10 +42,6 @@ int main()
 	InventoryItem* item = new InventoryItem[NUMBER_ITEMS];
 	int choice = 0;
 
-
-
-	
-	
 
 	cout << "****** Inventory Management System *******" << endl;
 	Menu();
@@ -77,6 +71,7 @@ int main()
 		}
 		case 4:
 		{
+
 			break;
 		}
 
@@ -87,17 +82,19 @@ int main()
 		}
 		case 6:
 		{
-			Assign_item(item, list_isFilled);
+			Assign_Item(item, list_isFilled);
 			break;
 
 		}
 		case 7:
 		{
-
+			Retrieve_Item(item, list_isFilled);
+			break;
 		}
 		case 8:
 		{
-
+			List_Assigned_Item(item, list_isFilled);
+			break;
 		}
 		case 9:
 		{
@@ -204,6 +201,7 @@ void Menu()
 void Add_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS])
 {
 	int count = 0;
+	char username[50];
 
 	//Checks the list to find an empty node in the array
 	for (int i = 0; i < FACULTY_MEMBERS; i++)
@@ -215,10 +213,23 @@ void Add_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS]
 		}
 	}
 
-	//Taking input info for the date
-	cout << "Enter item: ";
+
 	cin.ignore();
-	cin.getline(item[count].Name, MAX_NAME_CHAR);
+	//Taking input info for the date
+	while (1)
+	{
+		cout << "Enter item: ";
+		cin.getline(username, MAX_NAME_CHAR);
+
+		if (isalpha(username[0]))
+		{
+			strcpy_s(item[count].Name, MAX_NAME_CHAR, username);
+			break;
+		}
+		else
+			cout << "Please enter a valid name." << endl;
+	}
+	
 
 	//Taking valid input for Item ID
 	while (1)
@@ -246,8 +257,19 @@ void Add_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS]
 	}
 
 	//Taking input for item_category
-	cout << "Enter category: ";
-	cin.getline(item[count].category, 15);
+	while (1)
+	{
+		cout << "Enter category: ";
+		cin.getline(username, MAX_NAME_CHAR);
+
+		if (isalpha(username[0]))
+		{
+			strcpy_s(item[count].category, MAX_NAME_CHAR, username);
+			break;
+		}
+		else
+			cout << "Please enter a valid category." << endl;
+	}
 
 	//Updating the items list
 	list_isFilled[count] = 1;
@@ -258,6 +280,7 @@ void Add_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS]
 void View_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS])
 {
 	cout << setw(7) << "ID" << setw(15) << "Category" << '\t' << left << setw(50) << "Item Name" << right << setw(15) << "Count" << endl;
+	cout << setfill('-') << setw(90) << "-" << setfill(' ') << endl;
 	for (int i = 0; i < NUMBER_ITEMS; i++)
 	{
 		//CHecking the list to find filled space and displaying that item
@@ -273,11 +296,24 @@ void View_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS
 //Edit inventory items
 void Edit_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS])
 {
+	char username[50];
 	//GEtting input for ID from the user and validating  it
 	int index = Search_ID(item, list_isFilled);
 
 	cout << endl << "Enter new item: ";
-	cin.getline(item[index].Name, MAX_NAME_CHAR);
+	while (1)
+	{
+		cout << "Enter new item: ";
+		cin.getline(username, MAX_NAME_CHAR);
+
+		if (isalpha(username[0]))
+		{
+			strcpy_s(item[index].Name, MAX_NAME_CHAR, username);
+			break;
+		}
+		else
+			cout << "Please enter a valid name." << endl;
+	}
 
 	//Taking valid input for Item ID
 	while (1)
@@ -305,8 +341,19 @@ void Edit_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS
 	}
 
 	//Taking input for item_category
-	cout << "Enter category: ";
-	cin.getline(item[index].category, 15);
+	while (1)
+	{
+		cout << "Enter category: ";
+		cin.getline(username, MAX_NAME_CHAR);
+
+		if (isalpha(username[0]))
+		{
+			strcpy_s(item[index].category, MAX_NAME_CHAR, username);
+			break;
+		}
+		else
+			cout << "Please enter a valid category." << endl;
+	}
 
 	cout << "Item is Edited." << endl << endl;
 }
@@ -321,17 +368,27 @@ void Delete_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITE
 	//DELETING
 	list_isFilled[index] = 0;
 	item[index].Item_ID = 0;
-	item[index].AssignedItems = 0;
+	item[index].allocatedItems = 0;
 
 	cout << "Item deleted successfully..." << endl;
 }
 
-void Assign_item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS])
+//Assign inventory item
+void Assign_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS])
 {
+	char username[50];
 	int index = 0, assignee = 0, allocatedItems = 0;
 	//Getting ID from the user and validating it
 	index = Search_ID(item, list_isFilled);
-	
+
+	//Checking if any item is in STOCK (if no: exiting)
+	if (item[index].Item_count <= 0)
+	{
+		cout << "No item in STOCK. Can't assign." << endl;
+		return;
+	}
+
+
 	for (int i = 0; i < FACULTY_MEMBERS; i++)
 	{
 		if (item[index].assigned_to[i].allocated_items == 0)
@@ -342,17 +399,29 @@ void Assign_item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITE
 	}
 
 
-	cout << "Enter the person's name: ";
-	cin.getline(item[index].assigned_to[assignee].name, MAX_NAME_CHAR);
+	while (1)
+	{
+		cout << "Enter the person's name: ";
+		cin.getline(username, MAX_NAME_CHAR);
+
+		if (isalpha(username[0]))
+		{
+			strcpy_s(item[index].assigned_to[assignee].name, MAX_NAME_CHAR, username);
+			break;
+		}
+		else
+			cout << "Please enter a valid name." << endl;
+	}
 
 	while (1)
 	{
 		cout << "Enter the number of items you want to assign (in stock: " << item[index].Item_count << ") : ";
 		cin >> allocatedItems;
 
-		if (allocatedItems <= item[index].Item_count)
+		if (allocatedItems <= item[index].Item_count && allocatedItems>=0)
 		{
 			item[index].Item_count -= allocatedItems;
+			item[index].allocatedItems += allocatedItems;
 			item[index].assigned_to[assignee].allocated_items = allocatedItems;
 			break;
 		}
@@ -360,4 +429,92 @@ void Assign_item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITE
 	}
 
 	cout <<"(" << (allocatedItems) << ") items assigned to " << item[index].assigned_to[assignee].name << endl << endl;
+}
+
+void Retrieve_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS])
+{
+	int index = 0, assignee = 0, returnedItems = 0;
+	char userName[MAX_NAME_CHAR];
+	bool isFound = 0;
+
+	//Getting ID from the user and validating it
+	index = Search_ID(item, list_isFilled);
+
+	if (item[index].allocatedItems <= 0)
+	{
+		cout << "No item is ASSIGNED. Can't retrieve." << endl;
+		return;
+	}
+
+	while (1)
+	{
+		cout << "Enter the person's name: ";
+		cin.getline(userName, MAX_NAME_CHAR);
+
+		for (int i = 0; i < FACULTY_MEMBERS; i++)
+		{
+			if (item[index].assigned_to[i].allocated_items > 0)
+			{
+				if (strcmp(userName, item[index].assigned_to[i].name) == 0)
+				{
+					isFound = 1;
+					assignee = i;
+					break;
+				}
+
+			}
+		}
+
+		if (isFound == 1)
+		{
+			break;
+		}
+		else
+			cout << "Person not found. Please re-enter." << endl;
+
+	}
+	
+
+
+	while (1)
+	{
+		cout << "Enter the number of items retrieved (in stock: " << item[index].assigned_to[assignee].allocated_items << ") : ";
+		cin >> returnedItems;
+
+		if (returnedItems <= item[index].assigned_to[assignee].allocated_items && returnedItems>=0)
+		{
+			item[index].Item_count += returnedItems;
+			item[index].allocatedItems -= returnedItems;
+			item[index].assigned_to[assignee].allocated_items -= returnedItems;
+			break;
+		}
+		cout << "Invalid number of items entered. Please re-enter." << endl;
+	}
+
+	cout << "(" << (returnedItems) << ") items retrieved from " << item[index].assigned_to[assignee].name << endl << endl;
+}
+
+void List_Assigned_Item(InventoryItem item[NUMBER_ITEMS], bool list_isFilled[NUMBER_ITEMS])
+{
+	int index = 0;
+	//Getting ID from the user and validating it
+	index = Search_ID(item, list_isFilled);
+
+	//Checking if any item is assigned
+	if (item[index].allocatedItems <= 0)
+	{
+		cout << "No item is ASSIGNED." << endl;
+		return;
+	}
+
+	//Displaying the list of persons who borrowed the item
+	cout  << left << setw(50) << "Name" << setw(8) << "Number of Items" << endl;
+	cout << setfill('-') << setw(65) << "-" << setfill(' ') << endl;
+	for (int i = 0; i < FACULTY_MEMBERS; i++)
+	{
+		if (item[index].assigned_to[i].allocated_items > 0)
+		{
+			cout << setw(50) << item[index].assigned_to[i].name << setw(8) << item[index].assigned_to[i].allocated_items << endl;
+		}
+	}
 }
