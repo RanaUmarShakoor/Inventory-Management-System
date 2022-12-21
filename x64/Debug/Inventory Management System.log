@@ -1,2 +1,4 @@
 ﻿  Main.cpp
+C:\Users\Bad-Skull\Source\Repos\Inventory Management System\Main.cpp(245,12): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+C:\Users\Bad-Skull\Source\Repos\Inventory Management System\Main.cpp(269,12): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
   Inventory Management System.vcxproj -> C:\Users\Bad-Skull\Source\Repos\Inventory Management System\x64\Debug\Inventory Management System.exe
