@@ -51,7 +51,6 @@ void List_Assigned_Item(InventoryItem item[NUMBER_ITEMS]);
 
 int main()
 {
-	bool list_isFilled[NUMBER_ITEMS] = { 0 };
 	InventoryItem* item = new InventoryItem[NUMBER_ITEMS];
 	int choice = 0;
 
@@ -64,7 +63,7 @@ int main()
 	while (1)
 	{
 		cout << "Your choice: ";
-		cin >> choice;
+		choice = Number_valid();
 		cout << endl;
 
 		switch (choice)
